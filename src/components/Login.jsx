@@ -10,6 +10,7 @@ const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [backdropBlur, setBackdropBlur] = useState('1.5px');
   const apiUrl= import.meta.env.VITE_API_URL
+  console.log(apiUrl)
   const navigate = useNavigate(); // Initialize the navigate function
 
   const handlePasswordToggle = () => {
