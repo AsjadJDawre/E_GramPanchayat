@@ -18,7 +18,7 @@ const SidebarComponent = () => {
     const fetchApplications = async () => {
       try {
         console.log("Fetching applications...");
-        const response = await axios.post("/api/user/getapplication");
+        const response = await axios.post("/api/user/getapplication",{},{withCredentials:true});
         setApplication(response.data.data);
       } catch (error) {
         console.error("Error fetching applications:", error);
@@ -61,7 +61,7 @@ const SidebarComponent = () => {
 
   const handleDownload = async () => {
     try {
-      const res = await axios.post("/api/generatepdf", {}, { responseType: "blob" }); // Fetch as Blob
+      const res = await axios.post("/api/generatepdf", {},{withCredentials:true}, { responseType: "blob" }); // Fetch as Blob
       if (res.status === 200) {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         const pdfUrl = URL.createObjectURL(pdfBlob); // Create a temporary URL

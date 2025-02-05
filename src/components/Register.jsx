@@ -64,7 +64,8 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const resp = await axios.post('/api/register',formData,{headers: {'Content-Type': 'multipart/form-data'}});
+      const resp = await axios.post('/api/register',formData,{      withCredentials: true
+      }, {headers: {'Content-Type': 'multipart/form-data'}});
       const res = resp.data;
       if (res.status === 201) {
         toast.success("Registration successful!", {

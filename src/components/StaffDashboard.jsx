@@ -49,7 +49,8 @@ import { useNavigate } from 'react-router-dom';
 
       const fetchApplications = async () => {
         try {
-          const response = await axios.get("/api/getapplication");
+          const response = await axios.get("/api/getapplication",{},{      withCredentials: true
+          });
           if (response.data && Array.isArray(response.data.data)) {
             setApple(response.data.data);
           } else {
@@ -67,7 +68,8 @@ import { useNavigate } from 'react-router-dom';
   
     const fetchDocuments = async (appId) => {
       try {
-        const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}`);
+        const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}`,{},{      withCredentials: true
+        });
         setDocumentList(response.data.supportingDocuments || []);
         console.log(response.data.supportingDocuments);
       } catch (error) {
@@ -108,7 +110,8 @@ import { useNavigate } from 'react-router-dom';
       });
 
       try {
-        const response = await axios.post("/api/verify", reqData);
+        const response = await axios.post("/api/verify", reqData ,{      withCredentials: true
+        });
 
 
         if(response.status ===200){
