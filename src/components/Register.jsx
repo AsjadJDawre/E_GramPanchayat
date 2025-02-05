@@ -36,6 +36,7 @@ const Register = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL
 
   // Handle form input change
   const handleInputChange = (e) => {
@@ -64,7 +65,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const resp = await axios.post('/api/register',formData,{      withCredentials: true
+      const resp = await axios.post(`${apiUrl}/api/register`,formData,{      withCredentials: true
       }, {headers: {'Content-Type': 'multipart/form-data'}});
       const res = resp.data;
       if (res.status === 201) {
