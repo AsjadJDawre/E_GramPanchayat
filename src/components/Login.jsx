@@ -88,7 +88,7 @@ console.log(response)
   } catch (error) {
     if (error.response) {
       const { status, message } = error.response.data;
-
+      console.log("main : error :")
       if (status === 404) {
         toast.error("User does not exist!", {
           position: "top-right",
@@ -106,6 +106,7 @@ console.log(response)
         });
       }
     } else {
+      console.error(error);
       toast.error("Something went wrong!", {
         position: "top-right",
         draggable: false,
