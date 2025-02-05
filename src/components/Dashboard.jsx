@@ -15,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const response = await axios.post("/api/verify", {}, { withCredentials: true });
+        const response = await axios.post(`${apiUrl}/api/verify`, {}, { withCredentials: true });
   console.log("This is my reponse",response)
         if (response.status === 200) {
           setIsAuthenticated(true);
@@ -58,7 +58,7 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     const resp = await axios
-    .post("/api/logout",{},{withCredentials:true})
+    .post(`${apiUrl}/api/logout`,{},{withCredentials:true})
     .then((response) => {
         console.log(response.data);
         toast.success("User logged out successfully!");

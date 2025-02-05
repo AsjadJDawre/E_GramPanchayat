@@ -9,7 +9,7 @@ import { Toaster, toast } from "sonner"; // Import sonner
 const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [backdropBlur, setBackdropBlur] = useState('1.5px');
-
+  const apiUrl= import.meta.env.VITE_API_URL
   const navigate = useNavigate(); // Initialize the navigate function
 
   const handlePasswordToggle = () => {
@@ -36,7 +36,7 @@ const LoginForm = () => {
     setLoading(true);
 
   try {
-    const resp = await axios.post('/api/login', {
+    const resp = await axios.post(`${apiUrl}/api/login`, {
       email,
       password,
     },{

@@ -13,12 +13,13 @@ const SidebarComponent = () => {
   const [pdfUrl, setPdfUrl] = useState(null); // State to store PDF URL
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         console.log("Fetching applications...");
-        const response = await axios.post("/api/user/getapplication",{},{withCredentials:true});
+        const response = await axios.post(`${apiUrl}/api/user/getapplication`,{},{withCredentials:true});
         setApplication(response.data.data);
       } catch (error) {
         console.error("Error fetching applications:", error);
@@ -36,7 +37,7 @@ const SidebarComponent = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post("/api/logout",{},{withCredentials:true})
+      const response = await axios.post(`${apiUrl}/api/logout`,{},{withCredentials:true})
       console.log("this is the Logout response",response)
       toast.success("User logged out successfully!");
       setTimeout(() => {
@@ -61,7 +62,7 @@ const SidebarComponent = () => {
 
   const handleDownload = async () => {
     try {
-      const res = await axios.post("/api/generatepdf", {},{withCredentials:true}, { responseType: "blob" }); // Fetch as Blob
+      const res = await axios.post(`${apiUrl}/api/generatepdf`, {},{withCredentials:true}, { responseType: "blob" }); // Fetch as Blob
       if (res.status === 200) {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         const pdfUrl = URL.createObjectURL(pdfBlob); // Create a temporary URL

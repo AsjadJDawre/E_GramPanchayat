@@ -14,6 +14,7 @@ function AdminDashboard() {
           const [documentList, setDocumentList] = useState([]); // Store the documents for the selected app
           const [verificationStatus, setVerificationStatus] = useState("");
           const [message, setMessage] = useState("");
+          const apiUrl = import.meta.env.VITE_API_URL
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -21,7 +22,7 @@ function AdminDashboard() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const user = await axios.post("/api/verify", {}, { withCredentials: true });
+        const user = await axios.post(`${apiUrl}/api/verify`, {}, { withCredentials: true });
 
         if (user.status === 200) {
           setLoading(false);
@@ -57,7 +58,7 @@ function AdminDashboard() {
 
     const fetchApplications = async () => {
       try {
-        const response = await axios.get("/api/getapplication",{},{      withCredentials: true
+        const response = await axios.get(`${apiUrl}/api/getapplication`,{},{      withCredentials: true
         });
         if (response.data && Array.isArray(response.data.data)) {
           setApple(response.data.data);
@@ -79,7 +80,7 @@ function AdminDashboard() {
 //   };
   const handleLogout = async () => {
     const resp = await axios
-      .post("/api/logout",{},{withCredentials:true})
+      .post(`${apiUrl}/api/logout`,{},{withCredentials:true})
       .then((response) => {
         console.log(response.data);
         toast.success("User logged out successfully!");
@@ -124,7 +125,7 @@ function AdminDashboard() {
     });
 
     try {
-      const response = await axios.post("/api/updatestatus", reqData ,{      withCredentials: true
+      const response = await axios.post(`${apiUrl}/api/updatestatus`, reqData ,{      withCredentials: true
       });
 
 
@@ -145,7 +146,7 @@ function AdminDashboard() {
 
   const fetchDocuments = async (appId) => {
     try {
-      const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}` ,{},{      withCredentials: true
+      const response = await axios.get(`${apiUrl}/api/getDocuments/${appId}/${activeTab}` ,{},{      withCredentials: true
       });
       setDocumentList(response.data.supportingDocuments || []);
       console.log(response.data.supportingDocuments);

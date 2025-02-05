@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const ViewApplication = () => {
   // State to track active tab and applications
   const [activeTab, setActiveTab] = useState("Applied");
+  const apiUrl = import.meta.env.VITE_API_URL
 
   // Mock data for applications
   const applications = {
