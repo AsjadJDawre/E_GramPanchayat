@@ -49,7 +49,6 @@ const LoginForm = () => {
   }
   });
     
-console.log(response)
     // handling the response from the backend
     const res = resp.data;
     if (res.status === 200 && res.role==='user') {
