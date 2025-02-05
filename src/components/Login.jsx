@@ -52,7 +52,7 @@ const LoginForm = () => {
 console.log(response)
     // handling the response from the backend
     const res = resp.data;
-    if (res.status === 200 && res.user.role==='user') {
+    if (res.status === 200 && res.role==='user') {
       toast.success("User logged in successfully!",); // Success toast
 
 
@@ -65,7 +65,7 @@ console.log(response)
       }, 2000); // Delay navigation to see the success message
     }
 
-    else if (res.status ===200 && res.user.role==='admin') {
+    else if (res.status ===200 && res.role==='admin') {
       toast.success("Welcome Admin, logged in successfully!",); // Success toast
 
 
@@ -75,7 +75,7 @@ console.log(response)
       }, 2000);
       
     }
-    else if (res.status === 200 && res.user.role==='staff') {
+    else if (res.status === 200 && res.role==='staff') {
       toast.success("Welcome Staff, logged in successfully!",); // Success toast
 
 
