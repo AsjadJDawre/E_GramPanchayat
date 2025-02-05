@@ -57,7 +57,8 @@ function AdminDashboard() {
 
     const fetchApplications = async () => {
       try {
-        const response = await axios.get("/api/getapplication");
+        const response = await axios.get("/api/getapplication",{},{      withCredentials: true
+        });
         if (response.data && Array.isArray(response.data.data)) {
           setApple(response.data.data);
         } else {
@@ -123,7 +124,8 @@ function AdminDashboard() {
     });
 
     try {
-      const response = await axios.post("/api/updatestatus", reqData);
+      const response = await axios.post("/api/updatestatus", reqData ,{      withCredentials: true
+      });
 
 
       if(response.status ===200){
@@ -143,7 +145,8 @@ function AdminDashboard() {
 
   const fetchDocuments = async (appId) => {
     try {
-      const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}`);
+      const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}` ,{},{      withCredentials: true
+      });
       setDocumentList(response.data.supportingDocuments || []);
       console.log(response.data.supportingDocuments);
     } catch (error) {

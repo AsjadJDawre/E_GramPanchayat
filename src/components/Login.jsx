@@ -39,7 +39,9 @@ const LoginForm = () => {
     const resp = await axios.post('/api/login', {
       email,
       password,
-    },
+    },{
+      withCredentials: true
+    } ,
   {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
