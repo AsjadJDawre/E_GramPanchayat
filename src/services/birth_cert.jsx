@@ -42,6 +42,7 @@ const BirthCert = () => {
       [fieldName]: selectedFiles,
     }));
   };
+  const apiUrl =import.meta.env.VITE_API_URL
 
   const navigate = useNavigate();
 
@@ -67,8 +68,10 @@ const BirthCert = () => {
       });
 
       const response = await axios.post(
-        "/api/user/services/birth-cert",
-        submissionData,
+        `${apiUrl}/api/user/services/birth-cert`,
+        submissionData,{
+          withCredentials: true
+        },
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -252,6 +255,7 @@ const BirthCert = () => {
             </option>
             <option value="aadhaar">Aadhaar Card</option>
             <option value="passport">Passport</option>
+            <option value="rationCard">Ration Card</option>
             <option value="voterId">Voter ID Card (EPIC)</option>
             <option value="drivingLicense">Driving License</option>
             <option value="utilityBill">
@@ -285,7 +289,7 @@ const BirthCert = () => {
       </div>
     </form>
 
-    <Toaster />
+    <Toaster richColors position="top-right" />
     </>
   );
 };
