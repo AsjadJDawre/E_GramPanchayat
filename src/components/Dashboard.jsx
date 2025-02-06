@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+const apiUrl = import.meta.env.VITE_API_URL
   const navigate = useNavigate();
   useEffect(() => {
     const checkUser = async () => {
@@ -23,6 +23,7 @@ const Dashboard = () => {
           navigate("/");
         }
       } catch (error) {
+        console.log(error)
         navigate("/");
       } finally {
         setLoading(false);  // This ensures the loading state is updated correctly

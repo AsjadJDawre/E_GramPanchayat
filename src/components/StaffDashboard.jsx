@@ -14,12 +14,12 @@ import { useNavigate } from 'react-router-dom';
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+  const apiUrl = import.meta.env.VITE_API_URL
     const navigate = useNavigate();
     useEffect(() => {
       const checkUser = async () => {
         try {
-          const user = await axios.post("/api/verify", {}, { withCredentials: true });
+          const user = await axios.post(`${apiUrl}/api/verify`, {}, { withCredentials: true });
   
           if (user.status === 200) {
             setIsAuthenticated(true);
@@ -49,7 +49,7 @@ import { useNavigate } from 'react-router-dom';
 
       const fetchApplications = async () => {
         try {
-          const response = await axios.get("/api/getapplication",{},{      withCredentials: true
+          const response = await axios.get(`${apiUrl}/api/getapplication`,{},{      withCredentials: true
           });
           if (response.data && Array.isArray(response.data.data)) {
             setApple(response.data.data);
@@ -68,7 +68,7 @@ import { useNavigate } from 'react-router-dom';
   
     const fetchDocuments = async (appId) => {
       try {
-        const response = await axios.get(`/api/getDocuments/${appId}/${activeTab}`,{},{      withCredentials: true
+        const response = await axios.get(`${apiUrl}/api/getDocuments/${appId}/${activeTab}`,{},{      withCredentials: true
         });
         setDocumentList(response.data.supportingDocuments || []);
         console.log(response.data.supportingDocuments);
@@ -110,7 +110,7 @@ import { useNavigate } from 'react-router-dom';
       });
 
       try {
-        const response = await axios.post("/api/verify", reqData ,{      withCredentials: true
+        const response = await axios.post(`${apiUrl}/api/verify`, reqData ,{      withCredentials: true
         });
 
 
