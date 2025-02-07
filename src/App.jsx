@@ -10,6 +10,7 @@ import StaffDashboard from "./components/StaffDashboard";
 import Test from "./components/Test";
 import AdminDashboard from "./components/AdminDashboard";
 import NotFound from "./components/NotFound";
+import HouseholdCertificateForm from "./services/houseHold"
 function App() {
   // useEffect(() => {
   //   axios.get('/api/dashboard').then((response) => {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/birth_cert" element={<BirthCert />} />
         <Route path="/Admin" element={<AdminDashboard />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/household" element={<HouseholdCertificateForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
