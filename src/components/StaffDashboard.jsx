@@ -64,7 +64,7 @@ import { useNavigate } from 'react-router-dom';
       };
   
       fetchApplications();
-    }, []);
+    }, [isAuthenticated]);
   
     const fetchDocuments = async (appId) => {
       try {
