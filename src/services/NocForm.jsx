@@ -76,11 +76,17 @@ export default function NocForm() {
     });
 
     try {
-      const response = await axios.post(`${apiUrl}/api/noc`, formData, {withCredentials:true} ,{
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${apiUrl}/api/noc`,
+        formData,
+        {
+          withCredentials: true, // Include this here
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      
       // console.log(response)
       if (response.status >= 200 && response.status < 300) {
         const message = response.data.message; // Corrected the typo here
