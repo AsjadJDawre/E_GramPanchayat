@@ -430,7 +430,7 @@ function AdminDashboard() {
           </div>
         </div>
       )}
-<Toaster  />
+<Toaster richColors position='top-right' />
 
 </> 
 )
