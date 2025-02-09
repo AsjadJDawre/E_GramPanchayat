@@ -95,11 +95,11 @@ const navigate = useNavigate()
     // }
 
     try {
-      const response = await axios.post(`${apiUrl}/api/househould`, submissionData, {
+      const response = await axios.post(`${apiUrl}/api/househould`, submissionData, {withCredentials:true},{
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+      } );
   
       if (response.status >= 200 && response.status < 300) {
         const data = await response
