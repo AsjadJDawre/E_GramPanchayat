@@ -7,7 +7,7 @@ import {toast ,Toaster} from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 function AdminDashboard() {
-      const [activeTab, setActiveTab] = useState("birth Certificates");
+      const [activeTab, setActiveTab] = useState("Birth Certificates");
           const [apple, setApple] = useState([]);
           const [modalOpen, setModalOpen] = useState(false);
           const [selectedAppId, setSelectedAppId] = useState(null); // Store the selected app._id
@@ -44,7 +44,7 @@ function AdminDashboard() {
     };
 
     checkUser();
-  }, [navigate]);
+  }, []);
 
 
   
@@ -73,7 +73,7 @@ function AdminDashboard() {
     };
 
     fetchApplications();
-  }, []);
+  }, [isAuthenticated]);
 
 //   const toggleSidebar = () => {
 //     setIsOpen(!isOpen);
@@ -240,6 +240,12 @@ function AdminDashboard() {
         <div>
           <span style={{ color: '#FFFFFF', marginRight: '20px' }}>Languages</span>
           <span style={{ color: '#FFFFFF', marginRight: '20px' }}>Screen Reader Access</span>
+          <span 
+  style={{ color: 'red', marginRight: '20px' ,cursor:"pointer"}} 
+  onClick={handleLogout}
+>
+  Logout
+</span>
           <Link to={'/dashboard'} style={{ color: '#FFFFFF', marginRight: '20px' }}>Home</Link>
           <span style={{ color: '#FFFFFF' }}>Login</span>
         </div>
@@ -278,7 +284,7 @@ function AdminDashboard() {
         {/* G20 Logo */}
         <div>
           <img
-            src="../../public/resources/home/images/g20-logo.png"
+            src="/resources/home/images/g20-logo.png"
             alt="G20 Logo"
             style={{ height: '50px' }}
           />

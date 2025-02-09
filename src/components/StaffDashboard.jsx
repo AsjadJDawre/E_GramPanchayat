@@ -40,7 +40,7 @@ import { useNavigate } from 'react-router-dom';
       };
   
       checkUser();
-    }, [navigate]);
+    }, []);
   
   
   
@@ -110,20 +110,20 @@ import { useNavigate } from 'react-router-dom';
       });
 
       try {
-        const response = await axios.post(`${apiUrl}/api/verify`, reqData ,{      withCredentials: true
+        const response = await axios.post(`${apiUrl}/api/updatestatus`, reqData ,{      withCredentials: true
         });
 
 
         if(response.status ===200){
-          toast.success("Application verified successfully!");
+          toast.success("Verification status and message updated successfully!");
         }
         else {
-          toast.error("Application verification failed!");
+          toast.error("Failed to update the document");
         }
           // You can send this data to your backend for further processing
         closeModal();
       } catch (error) {
-        console.error("Error verifying application:", error);
+        console.error("Error Processing application:", error);
         
       }
     };
@@ -191,7 +191,7 @@ import { useNavigate } from 'react-router-dom';
         {/* G20 Logo */}
         <div>
           <img
-            src="../../public/resources/home/images/g20-logo.png"
+            src="/resources/home/images/g20-logo.png"
             alt="G20 Logo"
             style={{ height: '50px' }}
           />
@@ -252,7 +252,7 @@ import { useNavigate } from 'react-router-dom';
                             onClick={() => openModal(app._id)}
                             className="text-blue-500 underline"
                           >
-                            {app.action || "N/A"}
+                            {app.action || "UPDATE"}
                           </button>
                         </td>
                       </tr>
