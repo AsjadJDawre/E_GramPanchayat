@@ -136,7 +136,7 @@ const apiUrl = import.meta.env.VITE_API_URL
         {/* G20 Logo */}
         <div>
           <img
-            src="../../public/resources/home/images/g20-logo.png"
+            src="/resources/home/images/g20-logo.png"
             alt="G20 Logo"
             style={{ height: '50px' }}
           />
@@ -165,7 +165,7 @@ const apiUrl = import.meta.env.VITE_API_URL
   <Link to="/birth_cert">
       <section className="content">
         <div className="card">
-          <img src="service1.jpg" alt="Service 1" />
+          <img src="/resources/birth-service-image.jpg" alt="Service 1" />
           <div className="card-content">
             <h3>Birth Certificate Services</h3>
             <p>Apply for and download Birth Certificate.</p>
@@ -173,21 +173,31 @@ const apiUrl = import.meta.env.VITE_API_URL
         </div>
         </section>
         </Link>
+        <Link to="/household">
         <div className="card">
-          <img src="service2.jpg" alt="Service 2" />
+          <img src="/resources/houseHold-image.png" alt="Service 2" />
           <div className="card-content">
-            <h3>Community Development</h3>
-            <p>Initiatives to improve local infrastructure and wellbeing.</p>
-          </div>
-        </div>
+            <h3> Ministry of Rural Development
 
-        <div className="card">
-          <img src="service3.jpg" alt="Service 3" />
-          <div className="card-content">
-            <h3>Grievance Redressal</h3>
-            <p>Submit complaints and track their resolution online.</p>
+</h3>
+            <p>    Pradhan Mantri Awas Yojana - Household Registration .</p>
           </div>
         </div>
+</Link>
+
+<Link to="/noc" >
+        <div className="card">
+          <img src="/resources/noc-service-image.jpg" alt="Service 3" />
+          <div className="card-content">
+            <h3> 
+ Department of Urban Development
+
+</h3>
+            <p> Simplified NOC Approval Initiative
+            .</p>
+          </div>
+        </div>
+        </Link>
       </section>
 
       <footer  style={{ backgroundColor: '#D11B1B', padding: '10px', color: '#FFFFFF', textAlign: 'center' }} >

@@ -11,6 +11,8 @@ import Test from "./components/Test";
 import AdminDashboard from "./components/AdminDashboard";
 import NotFound from "./components/NotFound";
 import HouseholdCertificateForm from "./services/houseHold"
+import NocForm from "./services/NocForm";
+import Forgot_Password from "./components/Forgot_Password";
 function App() {
   // useEffect(() => {
   //   axios.get('/api/dashboard').then((response) => {
@@ -38,6 +40,8 @@ function App() {
         <Route path="/Admin" element={<AdminDashboard />} />
         <Route path="/test" element={<Test />} />
         <Route path="/household" element={<HouseholdCertificateForm />} />
+        <Route path="/noc"  element={<NocForm />} />
+        <Route path="/forgot-password"  element={<Forgot_Password />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

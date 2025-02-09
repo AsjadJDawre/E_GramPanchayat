@@ -166,7 +166,7 @@ const LoginForm = () => {
             </div>
             <div className="forget">
               <label>
-                <a href="#">Forget Password</a>
+               <Link to ="/forgot-password" >Forget Password </Link>
               </label>
             </div>
             <div className="button_group" id="login_button" disabled={loading}>
