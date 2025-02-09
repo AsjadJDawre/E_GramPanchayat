@@ -108,7 +108,7 @@ const navigate = useNavigate()
         toast.success(data.message || "Form submitted successfully!");
         setTimeout(()=>{
           navigate('/dashboard')
-        })
+        },3000)
       } else {
         const errorData = await response 
         // console.log(errorData);

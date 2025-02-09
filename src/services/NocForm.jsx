@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, Toaster } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export default function NocForm() {
   const [applicantName, setApplicantName] = useState("");
@@ -8,7 +9,7 @@ export default function NocForm() {
   const [contactNumber, setContactNumber] = useState("");
   const [plotNumber, setPlotNumber] = useState("");
   const [documents, setDocuments] = useState({});
-
+  const navigate = useNavigate()
   // Consolidated Business Details State
   const [businessDetails, setBusinessDetails] = useState({
     businessName: "",
@@ -91,6 +92,10 @@ export default function NocForm() {
       if (response.status >= 200 && response.status < 300) {
         const message = response.data.message; // Corrected the typo here
         toast.success(message);
+
+        setTimeout(()=>{
+          navigate('/dashboard')
+        },3000)
       }
       
     } catch (error) {
