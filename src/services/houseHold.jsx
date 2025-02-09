@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {toast , Toaster} from 'sonner';
+import { useNavigate } from "react-router-dom";
 
 const   HouseholdCertificateForm = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const   HouseholdCertificateForm = () => {
   }, []);
 
   const apiUrl = import.meta.env.VITE_API_URL
-
+const navigate = useNavigate()
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +104,9 @@ const   HouseholdCertificateForm = () => {
       if (response.status >= 200 && response.status < 300) {
         const data = await response
         toast.success(data.message || "Form submitted successfully!");
+        setTimeout(()=>{
+          navigate('/dashboard')
+        })
       } else {
         const errorData = await response 
         // console.log(errorData);
