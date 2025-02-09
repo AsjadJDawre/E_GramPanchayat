@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import cloudinary from "cloudinary-core"; // Correctly import Cloudinary for frontend
 import "../styles/Register.css";
-import { ToastContainer, toast } from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import {toast , Toaster} from "sonner"
 // import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
 
 
@@ -127,6 +126,8 @@ const Register = () => {
   return (
 
     <>
+    <Toaster richColors position='top-right' />
+    
     <form className="register-form" onSubmit={handleSubmit}>
     <h2>Register</h2>
   

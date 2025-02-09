@@ -270,7 +270,7 @@ const SidebarComponent = () => {
       </div>
     </div>
 
-    <Toaster richColor />
+<Toaster richColors position='top-right' />
 
     {pdfUrl &&modalOpen && (
 
