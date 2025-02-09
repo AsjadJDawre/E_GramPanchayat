@@ -76,7 +76,7 @@ export default function NocForm() {
     });
 
     try {
-      const response = await axios.post(`${apiUrl}/api/noc`, formData, {
+      const response = await axios.post(`${apiUrl}/api/noc`, formData, {withCredentials:true} ,{
         headers: {
           "Content-Type": "multipart/form-data",
         },
