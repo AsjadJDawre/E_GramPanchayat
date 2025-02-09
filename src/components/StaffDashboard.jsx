@@ -336,7 +336,7 @@ import { useNavigate } from 'react-router-dom';
 
     </div>
 
-<Toaster richColors position='top-right' />
+<Toaster richColors position="top-right" />
 </> 
 
 )
