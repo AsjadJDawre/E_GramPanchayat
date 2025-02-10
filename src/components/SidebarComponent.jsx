@@ -13,13 +13,17 @@ const SidebarComponent = () => {
   const [pdfUrl, setPdfUrl] = useState(null); // State to store PDF URL
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedScheme, setSelectedScheme] = useState(null); // State for Scheme Name
+  const [selectedRow, setSelectedRow] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL
-
+  const handleSchemeSelect = (schemeName) => {
+    setSelectedScheme(schemeName); // Update state with selected Scheme Name
+  };
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         console.log("Fetching applications...");
-        const response = await axios.post(`${apiUrl}/api/user/getapplication`,{},{withCredentials:true});
+        const response = await axios.post(`${apiUrl}/api/user/getapplication`,{schemeName: selectedScheme},{withCredentials:true});
         setApplication(response.data.data);
       } catch (error) {
         console.error("Error fetching applications:", error);
@@ -60,10 +64,21 @@ const SidebarComponent = () => {
     setActiveTab(status);
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (row) => {
+    setSelectedRow(row);
+
+    // Log the row's details
+// console.log(selectedRow)
     try {
-      const res = await axios.post(`${apiUrl}/api/generatepdf`, {},{withCredentials:true}, { responseType: "blob" }); // Fetch as Blob
-      if (res.status === 200) {
+      const res = await axios.post(
+        `${apiUrl}/api/generatepdf`,
+        {row}, // Request body
+        {
+          withCredentials: true, // Ensures cookies are sent
+          responseType: "blob",  // Fetch as Blob
+        }
+      );
+            if (res.status === 200) {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         const pdfUrl = URL.createObjectURL(pdfBlob); // Create a temporary URL
         setPdfUrl(pdfUrl); // Set the URL to the state
@@ -187,7 +202,7 @@ const SidebarComponent = () => {
         {/* G20 Logo */}
         <div>
           <img
-            src="../../public/resources/home/images/g20-logo.png"
+            src="/resources/home/images/g20-logo.png"
             alt="G20 Logo"
             style={{ height: '50px' }}
           />
@@ -243,7 +258,7 @@ const SidebarComponent = () => {
                   <td className="border p-2">{app.department}</td>
                   <td className="border p-2">{app.scheme}</td>
                   <td className="border p-2">{app.status}</td>
-                  <td className="hover:text-blue-500 cursor-pointer   border p-2"   onClick={handleDownload}>{app.status ==='Approved' ? 'Download Certificate' : 'NA'}</td>
+                  <td className="hover:text-blue-500 cursor-pointer   border p-2"   onClick={()=>handleDownload(app)}>{app.status ==='Approved' ? 'Download Certificate' : 'NA'}</td>
                   {/* <td className="border p-2">
                     {app.viewForm && (
                       <a href="#" className="text-blue-500 underline">
