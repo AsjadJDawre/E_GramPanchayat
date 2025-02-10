@@ -1,191 +1,196 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "../styles/Sidebar.css";
+import "boxicons/css/boxicons.min.css";
+import { toast, Toaster } from "sonner";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast ,Toaster } from "sonner";
 
-function NocForm() {
-  const [applicantName, setApplicantName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [address, setAddress] = useState("");
-  const [aadhaarNumber, setAadhaarNumber] = useState("");
-  const [landDetails, setLandDetails] = useState("");
-  const [supportingDocuments, setSupportingDocuments] = useState(null);
-  const [businessDetails, setBusinessDetails] = useState({
-    businessName: "",
-    purpose: "",
-    location: "",
-  });
+const Test = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [applications, setApplication] = useState([]);
+  const [activeTab, setActiveTab] = useState("Applied");
+  const [pdfUrl, setPdfUrl] = useState(null); // State to store PDF URL
+  const [selectedScheme, setSelectedScheme] = useState(null); // State for Scheme Name
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        console.log("Fetching applications...");
+        const response = await axios.post(
+          `${apiUrl}/api/user/getapplication`,
+          {},
+          { withCredentials: true }
+        );
+        setApplication(response.data.data);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      }
+    };
+    fetchApplications();
+  }, []);
 
-    if (!applicantName || !contactNumber || !address || !aadhaarNumber || !landDetails || !supportingDocuments || !businessDetails.businessName || !businessDetails.purpose || !businessDetails.location) {
-      toast.error("Please fill out all fields and upload the required document.");
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/logout`,
+        {},
+        { withCredentials: true }
+      );
+      console.log("this is the Logout response", response);
+      toast.success("User logged out successfully!");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Logout failed, please try again.");
+    }
+  };
+
+  const handleTabClick = (status) => {
+    setActiveTab(status);
+  };
+
+  const handleSchemeSelect = (schemeName) => {
+    setSelectedScheme(schemeName); // Update state with selected Scheme Name
+  };
+
+  const handleDownload = async () => {
+    if (!selectedScheme) {
+      toast.error("Please select a scheme to generate the PDF.");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("applicantName", applicantName);
-    formData.append("contactNumber", contactNumber);
-    formData.append("address", address);
-    formData.append("aadhaarNumber", aadhaarNumber);
-    formData.append("landDetails", landDetails);
-    formData.append("supportingDocuments", supportingDocuments);
-    formData.append("businessName", businessDetails.businessName);
-    formData.append("purpose", businessDetails.purpose);
-    formData.append("location", businessDetails.location);
-
-    console.log({
-      applicantName,
-      contactNumber,
-      address,
-      aadhaarNumber,
-      landDetails,
-      supportingDocuments,
-      businessDetails,
-    });
 
     try {
-      const response = await axios.post("/api/noc", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("NOC application submitted successfully.");
+      const res = await axios.post(
+        `${apiUrl}/api/generatepdf`,
+        { schemeName: selectedScheme }, // Send Scheme Name in the request
+        {
+          withCredentials: true,
+          responseType: "blob", // Fetch as Blob
+        }
+      );
+
+      if (res.status === 200) {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        setPdfUrl(pdfUrl);
+        setModalOpen(true);
+        toast.success("PDF Generated Successfully");
+      } else {
+        toast.error("Failed to Generate PDF");
+      }
     } catch (error) {
-      toast.error("Failed to submit NOC application. Please try again.");
+      console.error("Error generating PDF:", error);
+      toast.error("Error generating PDF");
     }
   };
 
-  const handleDocumentChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type !== "application/pdf") {
-      toast.error("Only PDF files are allowed.");
-      return;
-    }
-    setSupportingDocuments(file);
-  };
-
-  const handleBusinessDetailChange = (field, value) => {
-    setBusinessDetails((prev) => ({ ...prev, [field]: value }));
-  };
+  const filteredApplications = applications.filter((app) => {
+    if (activeTab === "Applied") return app.status === "Verified" || app.status === "Pending";
+    if (activeTab === "Approved") return app.status === "Approved";
+    if (activeTab === "Rejected") return app.status === "Rejected";
+    return [];
+  });
 
   return (
-    <>    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">NOC Application Form</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded shadow">
-        <div>
-          <label className="block text-gray-700 font-medium">Applicant Name</label>
-          <input
-            type="text"
-            value={applicantName}
-            onChange={(e) => setApplicantName(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter your name"
-          />
+    <>
+      <div className={`sidebar ${isOpen ? "open" : ""}`}>
+        <div className="logo-details">
+          <i className="bx bx-user"></i>
+          <div className="logo_name">EXAMPLE</div>
+          <i className="bx bx-menu" id="btn" onClick={toggleSidebar}></i>
+        </div>
+        <ul className="nav-list" style={{ marginLeft: "-28px" }}>
+          <li>
+            <button className="links_name" onClick={handleLogout}>
+              <i className="bx bx-log-out pl-[55px]"></i>
+              <span className="text-white links_name pl-[22px]">
+                {isOpen ? "LogOut" : ""}
+              </span>
+            </button>
+            <span className="tooltip">LogOut</span>
+          </li>
+          <li>
+            <Link to="/edit-profile">
+              <i className="bx bx-edit"></i>
+              <span className="links_name">Edit Profile</span>
+            </Link>
+            <span className="tooltip">Edit Profile</span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="application-status-container p-4 ml-28">
+        <div className="tabs flex border-b">
+          {["Applied", "Approved", "Rejected"].map((status) => (
+            <button
+              key={status}
+              onClick={() => handleTabClick(status)}
+              className={`tab px-4 py-2 ${
+                activeTab === status ? "bg-orange-500 text-white" : "bg-gray-200"
+              }`}
+            >
+              {status} Applications
+            </button>
+          ))}
         </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">Contact Number</label>
-          <input
-            type="text"
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter your contact number"
-          />
+        <div className="table-container mt-4">
+          {filteredApplications.length > 0 ? (
+            <table className="w-full border-collapse border-black">
+              <thead>
+                <tr className="bg-black-100">
+                  <th className="border p-2">Application ID</th>
+                  <th className="border p-2">Department Name</th>
+                  <th className="border p-2">Scheme Name</th>
+                  <th className="border p-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredApplications.map((app) => (
+                  <tr key={app.id}>
+                    <td className="border p-2">{app.id}</td>
+                    <td className="border p-2">{app.departmentName}</td>
+                    <td className="border p-2">{app.schemeName}</td>
+                    <td className="border p-2">
+                      <button
+                        className="bg-blue-500 text-white px-2 py-1"
+                        onClick={() => handleSchemeSelect(app.schemeName)}
+                      >
+                        Select Scheme
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No applications available.</p>
+          )}
         </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">Address</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter your address"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">Aadhaar Number</label>
-          <input
-            type="text"
-            value={aadhaarNumber}
-            onChange={(e) => setAadhaarNumber(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter your Aadhaar number"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">Land Details</label>
-          <textarea
-            value={landDetails}
-            onChange={(e) => setLandDetails(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter details of the land"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">Supporting Documents (PDF only)</label>
-          <input
-            type="file"
-            onChange={handleDocumentChange}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-
-        {/* Business Details Section */}
-        <div>
-          <label className="block text-gray-700 font-medium">Business Name</label>
-          <input
-            type="text"
-            value={businessDetails.businessName}
-            onChange={(e) => handleBusinessDetailChange("businessName", e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter business name"
-          />
-        </div>
-
-        {businessDetails.businessName && (
-          <div>
-            <label className="block text-gray-700 font-medium">Purpose</label>
-            <input
-              type="text"
-              value={businessDetails.purpose}
-              onChange={(e) => handleBusinessDetailChange("purpose", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Enter purpose of the business"
-            />
-          </div>
-        )}
-
-        {businessDetails.purpose && (
-          <div>
-            <label className="block text-gray-700 font-medium">Location</label>
-            <input
-              type="text"
-              value={businessDetails.location}
-              onChange={(e) => handleBusinessDetailChange("location", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Enter business location"
-            />
-          </div>
-        )}
 
         <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          onClick={handleDownload}
+          className="bg-green-500 text-white px-4 py-2 mt-4"
         >
-          Submit
+          Generate PDF
         </button>
-      </form>
-    </div>
-    <Toaster richColors position="top-right" />
+      </div>
     </>
-
   );
-}
+};
 
-export default NocForm;
+export default Test;
