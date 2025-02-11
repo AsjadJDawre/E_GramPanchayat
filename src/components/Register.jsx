@@ -344,7 +344,6 @@ const Register = () => {
       {loading ? "Registering..." : "Register"}
     </button>
   </form>
-      <ToastContainer />
 
   </>
   );
