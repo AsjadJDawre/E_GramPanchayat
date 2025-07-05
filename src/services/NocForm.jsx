@@ -9,20 +9,18 @@ export default function NocForm() {
   const [contactNumber, setContactNumber] = useState("");
   const [plotNumber, setPlotNumber] = useState("");
   const [documents, setDocuments] = useState({});
-  const navigate = useNavigate()
-  // Consolidated Business Details State
+
   const [businessDetails, setBusinessDetails] = useState({
     businessName: "",
     purpose: "",
     location: "",
   });
 
+  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    toast.warning("Fill each detail carefully and upload only PDF files", {
-      duration: 5000,
-    });
+    toast.warning("⚠️ Fill all details carefully and upload only PDF files", { duration: 4000 });
   }, []);
 
   const handleFileChange = (e, fieldName) => {
@@ -30,11 +28,15 @@ export default function NocForm() {
     if (file && file.type === "application/pdf") {
       setDocuments((prev) => ({
         ...prev,
-        [fieldName]: file, // Dynamically add file to the corresponding field name
+        [fieldName]: file,
       }));
     } else {
-      toast.error("Only PDF files are allowed.");
+      toast.error("❌ Only PDF files are allowed.");
     }
+  };
+
+  const handleBusinessDetailChange = (field, value) => {
+    setBusinessDetails((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +52,7 @@ export default function NocForm() {
       !businessDetails.location ||
       Object.keys(documents).length === 0
     ) {
-      toast.error("All fields are required.");
+      toast.error("All fields and documents are required.");
       return;
     }
 
@@ -59,214 +61,139 @@ export default function NocForm() {
     formData.append("aadhaarNumber", aadhaarNumber);
     formData.append("contactNumber", contactNumber);
     formData.append("plotNumber", plotNumber);
-    formData.append("businessName", businessDetails.businessName);
-    formData.append("purpose", businessDetails.purpose);
-    formData.append("location", businessDetails.location);
-
-    for (const [key, value] of Object.entries(documents)) {
-      formData.append(key, value); // Append each file with its respective field name
-    }
-
-    console.log("Submitted Data:", {
-      applicantName,
-      aadhaarNumber,
-      contactNumber,
-      plotNumber,
-      ...businessDetails,
-      documents,
-    });
+    Object.entries(businessDetails).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
+    Object.entries(documents).forEach(([key, file]) =>
+      formData.append(key, file)
+    );
 
     try {
-      const response = await axios.post(
-        `${apiUrl}/api/noc`,
-        formData,
-        {
-          withCredentials: true, // Include this here
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      
-      // console.log(response)
-      if (response.status >= 200 && response.status < 300) {
-        const message = response.data.message; // Corrected the typo here
-        toast.success(message);
+      const response = await axios.post(`${apiUrl}/api/noc`, formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-        setTimeout(()=>{
-          navigate('/dashboard')
-        },3000)
-      }
-      
+      toast.success(response.data.message || "NOC submitted successfully!");
+      setTimeout(() => navigate("/dashboard"), 2500);
     } catch (error) {
-      toast.error("Failed to submit NOC.");
+      toast.error("Submission failed. Try again.");
     }
-  };
-
-  const handleBusinessDetailChange = (field, value) => {
-    setBusinessDetails((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg space-y-4">
-      <Toaster richColors position="top-right" />
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">NOC Application Form</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-4">
-          {/* Applicant Details */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Applicant Name</label>
+    <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8 mt-10">
+      <Toaster position="top-right" richColors />
+      <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">
+        NOC Application Form
+      </h1>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Section: Applicant Info */}
+        <section>
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Applicant Information</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
             <input
               type="text"
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
               value={applicantName}
               onChange={(e) => setApplicantName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="Applicant Full Name"
+              className="form-input"
+              required
             />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Aadhaar Number</label>
             <input
               type="text"
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
               value={aadhaarNumber}
               onChange={(e) => setAadhaarNumber(e.target.value)}
-              placeholder="Enter your Aadhaar number"
+              placeholder="Aadhaar Number"
+              className="form-input"
+              required
             />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Contact Number</label>
             <input
               type="text"
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
-              placeholder="Enter your contact number"
+              placeholder="Contact Number"
+              className="form-input"
+              required
             />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Plot Number</label>
             <input
               type="text"
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
               value={plotNumber}
               onChange={(e) => setPlotNumber(e.target.value)}
-              placeholder="Enter plot number"
+              placeholder="Plot Number"
+              className="form-input"
+              required
             />
           </div>
+        </section>
 
-          {/* Business Details */}
-          <div>
-            <label className="block text-gray-700 font-medium">Business Name</label>
+        {/* Section: Business Info */}
+        <section>
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Business Details</h2>
+          <div className="space-y-4">
             <input
               type="text"
               value={businessDetails.businessName}
               onChange={(e) => handleBusinessDetailChange("businessName", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Enter business name"
+              placeholder="Business Name"
+              className="form-input"
+              required
             />
+            {businessDetails.businessName && (
+              <>
+                <input
+                  type="text"
+                  value={businessDetails.purpose}
+                  onChange={(e) => handleBusinessDetailChange("purpose", e.target.value)}
+                  placeholder="Purpose of Business"
+                  className="form-input"
+                  required
+                />
+                <input
+                  type="text"
+                  value={businessDetails.location}
+                  onChange={(e) => handleBusinessDetailChange("location", e.target.value)}
+                  placeholder="Business Location"
+                  className="form-input"
+                  required
+                />
+              </>
+            )}
           </div>
+        </section>
 
-          {businessDetails.businessName && (
-            <div>
-              <label className="block text-gray-700 font-medium">Purpose</label>
-              <input
-                type="text"
-                value={businessDetails.purpose}
-                onChange={(e) => handleBusinessDetailChange("purpose", e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Enter purpose of the business"
-              />
-            </div>
-          )}
+        {/* Section: Document Uploads */}
+        <section>
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Upload Documents (PDF Only)</h2>
+          <div className="space-y-4">
+            {[
+              { id: "identityProof", label: "Aadhaar Card / Identity Proof" },
+              { id: "landProof", label: "Land Ownership Proof" },
+              { id: "applicationLetter", label: "Application Letter / Proposal" },
+              { id: "landMap", label: "Land Use Map / Site Plan" },
+              { id: "environmentalClearance", label: "Environmental Clearance (Optional)" },
+              { id: "neighborNoc", label: "No Objection Certificate from Neighbors (Optional)" },
+            ].map(({ id, label }) => (
+              <div key={id}>
+                <label className="block text-gray-600 font-medium mb-1">{label}</label>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => handleFileChange(e, id)}
+                  className="form-input"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
 
-          {businessDetails.purpose && (
-            <div>
-              <label className="block text-gray-700 font-medium">Location</label>
-              <input
-                type="text"
-                value={businessDetails.location}
-                onChange={(e) => handleBusinessDetailChange("location", e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Enter business location"
-              />
-            </div>
-          )}
-
-          {/* Document Upload Section */}
-       
-{/* Applicant Identity Proof */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload Aadhaar Card / Identity Proof (PDF)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'identityProof')}
-  />
-</div>
-
-{/* Land Ownership Proof */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload Land Ownership Proof (PDF)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'landProof')}
-  />
-</div>
-
-{/* Application Letter or Proposal */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload Application Letter / Proposal (PDF)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'applicationLetter')}
-  />
-</div>
-
-{/* Land Use Map or Site Plan */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload Land Use Map / Site Plan (PDF)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'landMap')}
-  />
-</div>
-
-{/* Environmental Clearance (Optional) */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload Environmental Clearance (PDF) (if applicable)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'environmentalClearance')}
-  />
-</div>
-
-{/* Neighbor NOC (Optional) */}
-<div>
-  <label className="block text-gray-700 font-medium mb-2">Upload No Objection Certificate from Neighbors (PDF) (if applicable)</label>
-  <input
-    type="file"
-    accept="application/pdf"
-    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400"
-    onChange={(e) => handleFileChange(e, 'neighborNoc')}
-  />
-</div>
-</div>
+        {/* Submit Button */}
         <button
           type="submit"
-          className="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+          className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-green-700 transition"
         >
           Submit Application
         </button>

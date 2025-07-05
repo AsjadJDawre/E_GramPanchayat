@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {toast , Toaster} from 'sonner';
+import { toast, Toaster } from "sonner";
 import { useNavigate } from "react-router-dom";
+import "../index.css"
 
-const   HouseholdCertificateForm = () => {
+const HouseholdCertificateForm = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     dob: "",
@@ -15,18 +16,6 @@ const   HouseholdCertificateForm = () => {
     familyMembers: [],
   });
 
-  useEffect(() => {
-    toast.warning("Please upload all document in pdf format only.");
-  }, []);
-
-  const apiUrl = import.meta.env.VITE_API_URL
-const navigate = useNavigate()
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   const [files, setFiles] = useState({
     proofIdentity: null,
     proofResidence: null,
@@ -34,23 +23,32 @@ const navigate = useNavigate()
     passportPhoto: null,
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    toast.warning("📌 Please upload all documents in PDF format only.");
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handleFileChange = (e) => {
     const { id, files: fileList } = e.target;
-    setFiles((prevFiles) => ({
-      ...prevFiles,
-      [id]: fileList[0], // Save the selected file
+    setFiles((prev) => ({
+      ...prev,
+      [id]: fileList[0],
     }));
   };
 
-
-  // Handle family member input changes
   const handleMemberChange = (index, field, value) => {
-    const updatedMembers = [...formData.familyMembers];
-    updatedMembers[index][field] = value;
-    setFormData({ ...formData, familyMembers: updatedMembers });
+    const updated = [...formData.familyMembers];
+    updated[index][field] = value;
+    setFormData({ ...formData, familyMembers: updated });
   };
 
-  // Add a new family member row
   const handleAddMember = () => {
     setFormData({
       ...formData,
@@ -58,291 +56,162 @@ const navigate = useNavigate()
     });
   };
 
-  // Remove a family member row
   const handleRemoveMember = (index) => {
-    const updatedMembers = formData.familyMembers.filter((_, i) => i !== index);
-    setFormData({ ...formData, familyMembers: updatedMembers });
+    const updated = formData.familyMembers.filter((_, i) => i !== index);
+    setFormData({ ...formData, familyMembers: updated });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Create a FormData object
     const submissionData = new FormData();
-  
-    // Append text fields from `formData` state
+
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "familyMembers") {
-        // If `familyMembers` is an array, convert it to JSON string
         submissionData.append(key, JSON.stringify(value));
       } else {
         submissionData.append(key, value);
       }
     });
-  
-    // Append files from `files` state
-    Object.entries(files).forEach(([key, file]) => {
-      if (file) {
-        submissionData.append(key, file);
-      }
-    });
-  
 
-    // console.log("Logging FormData contents:");
-    // for (let pair of submissionData.entries()) {
-    //     console.log(`${pair[0]}:`, pair[1]);
-    // }
+    Object.entries(files).forEach(([key, file]) => {
+      if (file) submissionData.append(key, file);
+    });
 
     try {
-      const response = await axios.post(`${apiUrl}/api/househould`, submissionData,{
+      const response = await axios.post(`${apiUrl}/api/househould`, submissionData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-        withCredentials: true, // Include this here
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-      } );
-  
-      if (response.status >= 200 && response.status < 300) {
-        const data = await response
-        toast.success(data.message || "Form submitted successfully!");
-        setTimeout(()=>{
-          navigate('/dashboard')
-        },3000)
-      } else {
-        const errorData = await response 
-        // console.log(errorData);
-        toast.error(errorData.error || "Form submission failed!");
-      }
-    //   console.log("Form submitted successfully:", response.data);
+      toast.success("✅ Form submitted successfully!");
+      setTimeout(() => navigate("/dashboard"), 2500);
     } catch (error) {
-      toast.error("Error submitting form. Please try again.");
-    //   console.error("Error submitting form:", error.response?.data || error.message);
+      toast.error("❌ Submission failed. Please try again.");
     }
   };
-  
-  
 
   return (
     <form
-      className="p-6 bg-white rounded-lg shadow-md max-w-screen-md mx-auto border border-gray-300"
       onSubmit={handleSubmit}
-      style={{ fontFamily: "Arial, sans-serif" }}
+      className="p-6 sm:p-8 bg-white rounded-xl shadow-md max-w-3xl mx-auto mt-10 space-y-6 border border-gray-200"
     >
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">
-        Household Certificate Registration
-      </h1>
+      <h1 className="text-3xl font-bold text-center text-blue-800">Household Certificate Application</h1>
 
-      {/* Applicant Details */}
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Full Name</label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleInputChange}
-          placeholder="Enter your full name"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      {/* Applicant Info */}
+      <section>
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Applicant Details</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <input name="fullName" onChange={handleInputChange} value={formData.fullName} placeholder="Full Name" className="form-input" required />
+          <input name="dob" type="date" onChange={handleInputChange} value={formData.dob} className="form-input" required />
+          <select name="gender" onChange={handleInputChange} value={formData.gender} className="form-input" required>
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+          <input name="phone" onChange={handleInputChange} value={formData.phone} placeholder="Phone Number" className="form-input" required />
+          <input name="email" onChange={handleInputChange} value={formData.email} placeholder="Email Address" type="email" className="form-input" />
+        </div>
+        <textarea name="address" onChange={handleInputChange} value={formData.address} placeholder="Address" className="form-input mt-4" rows={3}></textarea>
+      </section>
 
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Date of Birth</label>
-        <input
-          type="date"
-          name="dob"
-          value={formData.dob}
-          onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Gender</label>
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Address</label>
-        <textarea
-          name="address"
-          value={formData.address}
-          onChange={handleInputChange}
-          placeholder="Enter your address"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-      </div>
-
-      {/* Family Member Details */}
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">Family Member Details</h2>
-      {formData.familyMembers.map((member, index) => (
-        <div key={index} className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <label className="block text-gray-600 font-medium mb-1">Full Name</label>
-            <input
-              type="text"
-              value={member.name}
-              onChange={(e) => handleMemberChange(index, "name", e.target.value)}
-              placeholder="Enter name"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600 font-medium mb-1">Relationship</label>
-            <input
-              type="text"
-              value={member.relationship}
-              onChange={(e) => handleMemberChange(index, "relationship", e.target.value)}
-              placeholder="Enter relationship"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600 font-medium mb-1">Date of Birth</label>
-            <input
-              type="date"
-              value={member.dob}
-              onChange={(e) => handleMemberChange(index, "dob", e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      {/* Family Members */}
+      <section>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-700">Family Members</h2>
           <button
             type="button"
-            onClick={() => handleRemoveMember(index)}
-            className="bg-red-500 text-white hover:bg-red-600 font-medium mt-2 px-4 py-2 rounded-lg shadow-md transition duration-200"
-            >
-            Remove
+            onClick={handleAddMember}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            + Add Member
           </button>
         </div>
-      ))}
-      <button
-        type="button"
-        onClick={handleAddMember}
-        className="text-blue-600 hover:text-blue-800 font-medium mb-6"
-      >
-        + Add Another Member
-      </button>
-
-      {/* Contact Information */}
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Phone Number</label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          placeholder="Enter your phone number"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Email Address</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="Enter your email"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+        {formData.familyMembers.map((member, index) => (
+          <div key={index} className="grid sm:grid-cols-4 gap-4 items-end my-4">
+            <input
+              value={member.name}
+              onChange={(e) => handleMemberChange(index, "name", e.target.value)}
+              placeholder="Full Name"
+              className="form-input"
+              required
+            />
+            <input
+              value={member.relationship}
+              onChange={(e) => handleMemberChange(index, "relationship", e.target.value)}
+              placeholder="Relationship"
+              className="form-input"
+              required
+            />
+            <input
+              value={member.dob}
+              type="date"
+              onChange={(e) => handleMemberChange(index, "dob", e.target.value)}
+              className="form-input"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveMember(index)}
+              className="text-red-600 hover:text-red-800 font-semibold text-sm"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </section>
 
       {/* Purpose */}
-      <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">Purpose of Application</label>
+      <section>
+        <h2 className="text-xl font-semibold text-gray-700">Purpose</h2>
         <textarea
           name="purpose"
           value={formData.purpose}
           onChange={handleInputChange}
-          placeholder="Enter purpose of the application"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          placeholder="State the purpose of this application"
+          className="form-input mt-2"
+          rows={3}
         ></textarea>
-      </div>
+      </section>
 
-      <div className="w-full mt-8">
-      <h2 className="text-xl font-semibold mb-4 text-gray-700">Upload Supporting Documents</h2>
+      {/* File Uploads */}
+      <section>
+        <h2 className="text-xl font-semibold text-gray-700">Documents</h2>
+        <p className="text-sm text-gray-500 mb-2">Only PDF format accepted.</p>
+        {[
+          { id: "proofIdentity", label: "Proof of Identity (Aadhaar, PAN, Voter ID)" },
+          { id: "proofResidence", label: "Proof of Residence (Electricity Bill, Ration Card)" },
+          { id: "affidavit", label: "Affidavit Declaring Household Members" },
+          { id: "passportPhoto", label: "Passport Size Photograph" },
+        ].map((doc) => (
+          <div key={doc.id} className="mb-4">
+            <label htmlFor={doc.id} className="block text-gray-600 font-medium mb-1">
+              {doc.label}
+            </label>
+            <input
+              type="file"
+              id={doc.id}
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="form-input"
+            />
+          </div>
+        ))}
+      </section>
 
-      {/* Proof of Identity */}
-      <div className="mb-6">
-        <label htmlFor="proofIdentity" className="block text-gray-600 font-medium mb-2">
-          Proof of Identity (Aadhaar, Voter ID, PAN Card)
-        </label>
-        <input
-          type="file"
-          id="proofIdentity"
-          accept=".pdf"
-          onChange={handleFileChange}
-          className="block w-full border border-gray-300 rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
-
-      {/* Proof of Residence */}
-      <div className="mb-6">
-        <label htmlFor="proofResidence" className="block text-gray-600 font-medium mb-2">
-          Proof of Residence (Electricity Bill, Ration Card)
-        </label>
-        <input
-          type="file"
-          id="proofResidence"
-          onChange={handleFileChange}
-          className="block w-full border border-gray-300 rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
-
-      {/* Affidavit */}
-      <div className="mb-6">
-        <label htmlFor="affidavit" className="block text-gray-600 font-medium mb-2">
-          Affidavit Declaring Household Members
-        </label>
-        <input
-          type="file"
-          id="affidavit"
-          onChange={handleFileChange}
-          className="block w-full border border-gray-300 rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
-
-      {/* Passport-Sized Photograph */}
-      <div className="mb-6">
-        <label htmlFor="passportPhoto" className="block text-gray-600 font-medium mb-2">
-          Passport-Sized Photograph
-        </label>
-        <input
-          type="file"
-          id="passportPhoto"
-          onChange={handleFileChange}
-          className="block w-full border border-gray-300 rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
-      </div>
-
-
-
-
-
-
-      {/* Submit Button */}
+      {/* Submit */}
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700"
-        onSubmit={()=>alert("Form submitted successfully!")}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition"
       >
         Submit Application
       </button>
-      <Toaster  richColors toastOptions={{ duration: 3000 }}   position="top-right" />
+
+      <Toaster position="top-right" richColors />
     </form>
   );
-}
+};
 
 export default HouseholdCertificateForm;
