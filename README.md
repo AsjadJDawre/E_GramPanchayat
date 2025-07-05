@@ -104,21 +104,31 @@ E-Gram Panchayat is a web-based platform aimed at digitizing administrative work
 ---
 
 ## 🖼️ Project Screenshots  
+### 📌 User Landing Page   
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/User-Landing.png)  
 
-### 📌 Admin Action  
-![Admin Action](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/Admin_Action.png)  
+### 📌 User View Application  
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/User-Application.png)  
+
+### 📌 User Downloading Approved Application  
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/PDF-gen.png)  
+
+
 
 ### 📌 Admin Dashboard  
-![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/Admin_dashboard.png)  
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Dashboard.png)  
+
+### 📌 Admin Dashboard  
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Dashboard-2.png)  
+### 📌 Admin Application Management   
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Application-Manage.png)  
+### 📌 Admin Action ( verifying the Uploaded document's in a preview and deciding to Approve or Reject Application )    
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/verifying_uploaded_docs.png)  
+
 
 ### 📌 Password Recovery  
 ![Password Recovery](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/Forgot_pass1.png)  
 
-### 📌 User Dashboard  
-![User Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/User-dashboard.png)  
-
-### 📌 User View Application  
-![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/View_application.png)  
 
 ---
 
