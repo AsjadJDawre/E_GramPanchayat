@@ -1,162 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #2c5282; /* Darker blue for authority */
+  --primary-dark: #1a365d;
+  --secondary: #4a5568; /* Neutral gray */
+  --light: #f7fafc;
+  --dark: #1a202c;
+  --gray: #718096;
+  --light-gray: #e2e8f0;
+  --border-color: #cbd5e0;
+  --success: #38a169; /* Government green */
+}
 
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-  }
-  
-  .login_section {
+}
+
+.login_section {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     width: 100%;
-    background-color: royalblue;
+    background-color: #f0f4f8; /* Light neutral background */
+    background-image: linear-gradient(to bottom, #f0f4f8, #e2e8f0);
     background-position: center;
     background-size: cover;
-  }
-  
-  .form-box {
     position: relative;
-    width: 400px;
-    height: 450px;
-    background-color:white;
-    /* background: transparent; */
-    border: 2px solid black ;
-    border-radius: 20px;
-    backdrop-filter: blur(1.5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  h2 {
-    font-size: 2em;
-    color: black;
+}
+
+/* Government seal/emblem effect */
+.login_section::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIHN0cm9rZT0iI2Q5ZTJmNiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PC9zdmc+');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.form-box {
+    position: relative;
+    width: 420px;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.form-box:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Government header accent */
+.form-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--primary);
+}
+
+h2 {
+    font-size: 24px;
+    color: var(--dark);
     text-align: center;
-    font-family: Georgia;
-  }
-  
-  .inputbox {
+    margin-bottom: 30px;
+    font-weight: 600;
     position: relative;
-    margin: 30px 0;
-    width: 310px;
-    border-bottom: 2px solid #000000
-  }
-  
-  .inputbox label {
+}
+
+/* Subtle underline */
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.inputbox {
+    position: relative;
+    margin: 25px 0;
+}
+
+.inputbox label {
     position: absolute;
     top: 50%;
-    left: 5px;
+    left: 12px;
     transform: translateY(-50%);
-    color: #000000;
-    font-size: 1em;
+    color: var(--gray);
+    font-size: 15px;
     pointer-events: none;
-    transition: 0.5s;
-  }
-  
-  input:focus ~ label,
-  input:valid ~ label {
-    top: -5px;
-  }
-  
-  .inputbox input {
-    width: 100%;
-    height: 50px;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 1em;
-    padding: 0 35px 0 5px;
-    color: #000000;
-  }
-  
-  .inputbox ion-icon {
-    position: absolute;
-    right: 8px;
-    color: #000000;
-    font-size: 1.2em;
-    top: 20px;
-  }
-  
-  .forget {
-      margin: -15px 0 15px;
-      font-size: 0.9em;
-      color: #000000;
-      display: flex;
-      align-items: center; /* Align items vertically in the center */
-    }
-    
-    .forget label input {
-      margin-right: 3px;
-      padding-left: 12px;
-      color: rgb(35, 0, 81);
-    }
-    
-    .forget a {
-    
-      color: #000000 ;
-      text-decoration: none;
-      margin-left: 60px; /* Pushes the "Forget Password" link to the right */
-    }
-    
-    .forget a:hover {
-        color: #040e5f;
-      text-decoration: underline;
-    }
-    
-    
-  .forget label a {
-    color: #000000 ;
-    text-decoration: none;
-  }
-  
-  .forget label a:hover {
-    text-decoration: underline
-  }
-  #login_button {
+    transition: all 0.3s ease;
+    padding: 0 5px;
+    background: white;
+}
 
-      margin-top: 20px; /* Adjust the top margin as needed */
+.inputbox input {
+    width: 100%;
+    height: 48px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    outline: none;
+    font-size: 15px;
+    padding: 0 15px;
+    color: var(--dark);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.inputbox input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(44, 82, 130, 0.1);
+}
+
+.inputbox input:focus ~ label,
+.inputbox input:valid ~ label {
+    top: 0;
+    transform: translateY(-50%) scale(0.9);
+    color: var(--primary);
+}
+
+.inputbox ion-icon {
+    position: absolute;
+    right: 15px;
+    color: var(--gray);
+    font-size: 1.2em;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.inputbox ion-icon:hover {
+    color: var(--primary);
+}
+
+.forget {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0 25px;
+    font-size: 14px;
+}
+
+.forget label {
+    display: flex;
+    align-items: center;
+    color: var(--gray);
+    cursor: pointer;
+}
+
+.forget label input {
+    margin-right: 8px;
+    accent-color: var(--primary);
+}
+
+.forget a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forget a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.custom_submit_button {
+    width: 100%;
+    height: 48px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom_submit_button:hover {
+    background: var(--primary-dark);
+}
+
+.custom_submit_button:active {
+    transform: translateY(1px);
+}
+
+.custom_submit_button:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+}
+
+.register {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--gray);
+    font-size: 14px;
+}
+
+.register a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.register a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Loading animation */
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { 
+        transform: scale(0);
+    }
+    40% { 
+        transform: scale(1);
+    }
+}
+
+/* Government seal watermark */
+.gov-watermark {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: var(--gray);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.gov-watermark::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzcxODA5NiIgZD0iTTEyLDJBMTAsMTAgMCAwLDAgMiwxMkExMCwxMCAwIDAsMCAxMiwyMkExMCwxMCAwIDAsMCAyMiwxMkExMCwxMCAwIDAsMCAxMiwyTTEyLDNBOSw5IDAgMCwxIDIxLDEyQTksOSAwIDAsMSAxMiwyMUE5LDkgMCAwLDEgMywxMkE5LDkgMCAwLDEgMTIsM00xMSw3VjE3SDEzVjdIMTFNMTUsMTNWMTdIMTdWMTNIMTVNMTUsOVYxMUgxN1Y5SDE1TTcsMTNWMTdIOVYxM0g3TTcsOVYxMUg5VjlIN1oiIC8+PC9zdmc+');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-right: 6px;
+    opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .form-box {
+        width: 90%;
+        padding: 30px 20px;
     }
     
-   
-    a {
-      color: #040e5f ; 
-      margin-left: 43px;
-      text-decoration: none;
+    h2 {
+        font-size: 20px;
     }
-    
-    a:hover {
-      text-decoration: underline; /* Apply underline on hover */
-  
-    }
-    
-    p {
-      color: #000000 ;
-      margin-left: 20px;
-      margin-top: 30px;
-  
-    }
-    
-    
-    .forget{
-        position: relative;
-        right: -120px;
-            }
-            .custom_submit_button {
-      width: 100%;
-      height: 40px;
-      color:#000000;
-      font-size: 18px;
-      font-weight: bold;
-      border: 2px solid #000000;
-      border-radius: 20px;
-      background-color: transparent;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    
-    .custom_submit_button:hover {
-      background-color: #040e5f;
-      color: #fff;
-    }
+}
