@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+const apiUrl = import.meta.env.VITE_API_URL;
+
+import axios from "axios";
 import { 
   FiHome, 
   FiUser, 
@@ -18,15 +23,23 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const navigate = useNavigate();
+    const { username } = useParams();
+
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleSubmenu = (menu) => {
     setActiveSubmenu(activeSubmenu === menu ? null : menu);
   };
 
-  const handleLogout = () => {
-    // Add your logout logic here
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${apiUrl}/api/logout`, {}, { withCredentials: true });
+      toast.success("Logged out successfully!");
+      setTimeout(() => navigate("/"), 1500);
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Logout failed. Please try again.");
+    }
   };
 
   return (
@@ -61,7 +74,7 @@ const Sidebar = () => {
         </div>
         {isOpen && (
           <div className="ml-3 overflow-hidden">
-            <p className="font-medium text-gray-800 truncate">John Doe</p>
+            <p className="font-medium text-gray-800 truncate">{username ? username : "User"}</p>
             <p className="text-xs text-gray-500 truncate">Citizen</p>
           </div>
         )}
@@ -82,7 +95,7 @@ const Sidebar = () => {
 
           <li>
             <Link
-              to="/viewApplication"
+              to="#"
               className="flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               <FiFileText className="text-lg" />
