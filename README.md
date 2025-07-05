@@ -126,9 +126,6 @@ E-Gram Panchayat is a web-based platform aimed at digitizing administrative work
 ![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/verifying_uploaded_docs.png)  
 
 
-### 📌 Password Recovery  
-![Password Recovery](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/Forgot_pass1.png)  
-
 
 ---
 
