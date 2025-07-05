@@ -1,218 +1,281 @@
-import React, { useEffect ,useState} from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { 
+  Home, 
+  FileText, 
+  User, 
+  LogOut, 
+  Globe, 
+  ShieldCheck, 
+  Baby, 
+  House, 
+  FileCheck, 
+  Clock,
+  AlertCircle,
+  Loader2
+} from "lucide-react";
 
 const Dashboard = () => {
-  console.log("Dashboard component rendered!");
-
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-const apiUrl = import.meta.env.VITE_API_URL
+  const [userData, setUserData] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const response = await axios.post(`${apiUrl}/api/verify`, {}, { withCredentials: true });
-  console.log("This is my reponse",response)
-        if (response.status === 200) {
-          setIsAuthenticated(true);
-        } else {
-          navigate("/");
-        }
-      } catch (error) {
-        console.log(error)
+
+ useEffect(() => {
+  const checkUser = async () => {
+    try {
+      const [authResponse, userResponse] = await Promise.all([
+        axios.post(`${apiUrl}/api/verify`, {}, { withCredentials: true }),
+        axios.get(`${apiUrl}/api/user`, { withCredentials: true }),
+      ]);
+
+      if (authResponse.status === 200) {
+        setIsAuthenticated(true);
+        setUserData(userResponse.data.data);
+        console.log('username', userResponse.data.data.username);
+      } else {
         navigate("/");
-      } finally {
-        setLoading(false);  // This ensures the loading state is updated correctly
       }
-    };
-  
-    checkUser();
-  }, []);
-  useEffect(() => {
-    console.log(`Updated state: loading=${loading}, isAuthenticated=${isAuthenticated}`);
-  }, [loading, isAuthenticated]);
-    
+    } catch (error) {
+      console.log(error);
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   const verifyJWT = async () => {
-  //     try {
-  //       const response = await axios.get("/api/user/dashboard");
-  //       if (response.status === 200) {
-  //         // toast.success("Welcome to the dashboard!");
-  //         console.log("Welcome Back")
-  //       }
-  //     } catch (error) {
-  //       console.error("JWT verification failed:", error);
-  //       toast.error("Unauthorized access. Redirecting to login...");
-  //       navigate("/");
-  //     }
-  //   };
-
-  //   verifyJWT();
-  // }, [navigate]);
-
+  checkUser();
+}, []);
 
 
   const handleLogout = async () => {
-    const resp = await axios
-    .post(`${apiUrl}/api/logout`,{},{withCredentials:true})
-    .then((response) => {
-        console.log(response.data);
-        toast.success("User logged out successfully!");
-
-        // Delay navigation after showing the success message
-        setTimeout(() => {
-          navigate("/");
-        }, 2000); // Wait 2 seconds before redirecting
-      })
-      .catch((error) => {
-        console.error("Logout error:", error);
-        toast.error("Logout failed, please try again.");
-      });
+    try {
+      await axios.post(`${apiUrl}/api/logout`, {}, { withCredentials: true });
+      toast.success("Logged out successfully!");
+      setTimeout(() => navigate("/"), 1500);
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Logout failed. Please try again.");
+    }
   };
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="spinner-border animate-spin h-8 w-8 border-t-4 border-blue-600 rounded-full"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+        <p className="mt-4 text-lg text-gray-600">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        <div className="max-w-md p-6 bg-white rounded-lg shadow-md text-center">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Access Denied</h2>
+          <p className="text-gray-600 mb-6">You are not authorized to view this page.</p>
+          <Link 
+            to="/" 
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Return to Login
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="wrapper">
-    {
-        isAuthenticated?  ( 
-<>
-    <div style={{ fontFamily: 'Arial, sans-serif', margin: '0', padding: '0', width: '100%', color: '#000' }}>
-      
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <div style={{ backgroundColor: '#000', padding: '10px', color: '#FFA500', textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ color: '#FFFFFF', fontWeight: 'bold' }}>
-          GOVERNMENT OF INDIA | MINISTRY OF PANCHAYATI RAJ
-        </div>
-        <div>
-          <span style={{ color: '#FFFFFF', marginRight: '20px' }}>Languages</span>
-          {/* <span style={{ color: '#FFFFFF', marginRight: '20px' }}>Screen Reader Access</span> */}
-          <Link to={"/viewApplication"} style={{ color: '#FFFFFF', marginRight: '20px' }}>View Applications</Link>
-          <span style={{ color: '#FFFFFF', marginRight: '20px' }}>Home</span>
-          <button onClick={handleLogout} style={{ color: 'red' }}>LogOut</button>
-        </div>
-      </div>
-      
-      {/* Main Content */}
-<div 
-  style={{
-    background: 'linear-gradient(135deg, #fee185, #f9be00)', 
-    padding: '20px', 
-    position: 'relative', 
-    textAlign: 'center'
-  }}
->
-
-<div style={{ fontFamily: 'Arial, sans-serif', margin: '0', padding: '0', width: '100%', color: '#000' }}>
-      {/* Header */}
-      <div style={{ backgroundColor: '#F7C000', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {/* Emblem and Heading */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img
-            src="resources/home/images/logo.png"
-            alt="Government Emblem"
-            style={{ height: '50px', marginRight: '15px' }}
-          />
-          <div>
-            <div className="ml-[-16rem]" style={{ fontSize: '2em', fontWeight: 'bold', color: '#4B0082', marginBottom: '5px' }}>
-              eGramSwaraj
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4 border-b border-gray-200">
+            <div className="flex items-center space-x-4">
+              <ShieldCheck className="h-8 w-8 text-indigo-600" />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">eGramSwaraj</h1>
+                <p className="text-xs text-gray-500">Ministry of Panchayati Raj, Government of India</p>
+              </div>
             </div>
-            <div style={{ fontSize: '1em', color: '#4B0082' }}>
+            
+            <div className="flex items-center space-x-6">
+              <div className="hidden md:flex items-center space-x-4">
+                <Link     to={`/viewApplication/${encodeURIComponent(userData?.username || "User")}`}
+ className="flex items-center text-gray-700 hover:text-indigo-600">
+                  <FileText className="h-5 w-5 mr-1" />
+                  <span>Applications</span>
+                </Link>
+                <button className="flex items-center text-gray-700 hover:text-indigo-600">
+                  <Globe className="h-5 w-5 mr-1" />
+                  <span>Languages</span>
+                </button>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <div className="hidden md:flex flex-col text-right">
+                  <span className="text-sm font-medium text-gray-900">
+                    {userData?.username || "User"}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {userData?.email || "user@example.com"}
+                  </span>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center px-3 py-1 bg-gray-100 rounded-md text-gray-700 hover:bg-gray-200 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 mr-1" />
+                  <span className="hidden md:inline">Logout</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, {userData?.username?.split(' ')[0] || 'User'}!</h2>
+            <p className="text-lg text-gray-800 max-w-3xl mx-auto">
               Simplified Work Based Accounting Application for Panchayati Raj
-            </div>
+            </p>
           </div>
-        </div>
-
-        {/* G20 Logo */}
-        <div>
-          <img
-            src="/resources/home/images/g20-logo.png"
-            alt="G20 Logo"
-            style={{ height: '50px' }}
-          />
         </div>
       </div>
 
       {/* Main Content */}
-      <div style={{ backgroundColor: '#FFF3D1', padding: '20px' }}>
-        <div style={{ width: '80%', margin: '0 auto', fontSize: '1em', lineHeight: '1.5' }}>
-          To strengthen e-Governance in Panchayati Raj Institutions (PRIs) across the country, Ministry of Panchayati Raj (MoPR) has launched eGramSwaraj, a user-friendly web-based portal. eGramSwaraj aims to bring in better transparency in the decentralised planning, progress reporting and work-based accounting.
+      <main className="flex-grow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Link 
+                to="/birth_cert" 
+                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-200"
+              >
+                <div className="p-6 flex items-start">
+                  <div className="bg-blue-100 p-3 rounded-full mr-4">
+                    <Baby className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-1">Birth Certificate</h4>
+                    <p className="text-sm text-gray-500">Apply for or download birth certificate</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link 
+                to="/household" 
+                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-200"
+              >
+                <div className="p-6 flex items-start">
+                  <div className="bg-green-100 p-3 rounded-full mr-4">
+                    <House className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-1">Household Registration</h4>
+                    <p className="text-sm text-gray-500">Pradhan Mantri Awas Yojana registration</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link 
+                to="/noc" 
+                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-200"
+              >
+                <div className="p-6 flex items-start">
+                  <div className="bg-purple-100 p-3 rounded-full mr-4">
+                    <FileCheck className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-1">NOC Approval</h4>
+                    <p className="text-sm text-gray-500">Simplified NOC approval process</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* Recent Activity Section */}
+          <div className="mb-8">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+              <div className="p-6">
+                <div className="flex items-center text-gray-500 mb-4">
+                  <Clock className="h-5 w-5 mr-2" />
+                  <span>No recent activity</span>
+                </div>
+                <Link 
+                 to={`/viewApplication/${encodeURIComponent(userData?.username || "User")}`} 
+                  className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  View all applications →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Announcements */}
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Announcements</h3>
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+              <div className="p-6">
+                <div className="flex items-start mb-4">
+                  <div className="bg-yellow-100 p-2 rounded-full mr-3">
+                    <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-1">System Maintenance</h4>
+                    <p className="text-sm text-gray-500">
+                      Scheduled maintenance on July 10th from 2:00 AM to 4:00 AM. Services may be temporarily unavailable.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-blue-100 p-2 rounded-full mr-3">
+                    <Globe className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-1">Bhashini Integration</h4>
+                    <p className="text-sm text-gray-500">
+                      Now supporting multiple Indian languages through Bhashini platform.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-      
-      
+      </main>
+
       {/* Footer */}
-      <div style={{ backgroundColor: '#D11B1B', padding: '10px', color: '#FFFFFF', textAlign: 'center' }}>
-        <span className="ml-[-39rem]" style={{ fontWeight: 'bold', marginRight: '10px' }}>LATEST UPDATES</span>
-        <span>Now integrated with Bhashini</span>
-        <a href="https://mActionSoftAppDownloadLink.com" style={{ color: '#FFFFFF', textDecoration: 'none', marginLeft: '10px' }}>Download mActionSoft App</a>
-      </div>
-    </div>
- 
-   
-      <section className="content">
-  <Link to="/birth_cert">
-      <section className="content">
-        <div className="card">
-          <img src="/resources/birth-service-image.jpg" alt="Service 1" />
-          <div className="card-content">
-            <h3>Birth Certificate Services</h3>
-            <p>Apply for and download Birth Certificate.</p>
+      <footer className="bg-gray-800 text-white py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <p className="text-sm">
+                © {new Date().getFullYear()} eGramSwaraj. All rights reserved.
+              </p>
+            </div>
+            <div className="flex space-x-6">
+              <a href="#" className="text-sm hover:text-yellow-400">Privacy Policy</a>
+              <a href="#" className="text-sm hover:text-yellow-400">Terms of Service</a>
+              <a href="#" className="text-sm hover:text-yellow-400">Contact Us</a>
+            </div>
           </div>
         </div>
-        </section>
-        </Link>
-        <Link to="/household">
-        <div className="card">
-          <img src="/resources/houseHold-image.png" alt="Service 2" />
-          <div className="card-content">
-            <h3> Ministry of Rural Development
-
-</h3>
-            <p>    Pradhan Mantri Awas Yojana - Household Registration .</p>
-          </div>
-        </div>
-</Link>
-
-<Link to="/noc" >
-        <div className="card">
-          <img src="/resources/noc-service-image.jpg" alt="Service 3" />
-          <div className="card-content">
-            <h3> 
- Department of Urban Development
-
-</h3>
-            <p> Simplified NOC Approval Initiative
-            .</p>
-          </div>
-        </div>
-        </Link>
-      </section>
-
-      <footer  style={{ backgroundColor: '#D11B1B', padding: '10px', color: '#FFFFFF', textAlign: 'center' }} >
-        <p className="text-white text-xl">&copy; 2024 E-Gram Panchayat. All rights reserved.</p>
       </footer>
+
       <Toaster richColors position="top-right" />
-    </div>
-    </>
-    )
-    : (
-     <div className="text-center">
-       <p>You are not authorized to access this page.</p>
-     </div>
-      
-     )}
     </div>
   );
 };

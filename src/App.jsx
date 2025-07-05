@@ -13,6 +13,8 @@ import NotFound from "./components/NotFound";
 import HouseholdCertificateForm from "./services/houseHold"
 import NocForm from "./services/NocForm";
 import Forgot_Password from "./components/Forgot_Password";
+import AdminLandingPage from "./components/AdminLanding";
+import ViewApplication from "./components/ViewApplication";
 function App() {
   // useEffect(() => {
   //   axios.get('/api/dashboard').then((response) => {
@@ -33,11 +35,13 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
          <Route path="/dashboard" element={<Dashboard />} />
-         <Route path="/viewApplication" element={<SidebarComponent />} />
+<Route path="/viewApplication/:username" element={<ViewApplication />} />
+         {/* <Route path="/viewApplication-test" element={<ViewApplication />} /> */}
         {/* <Route path="/sidebar" element={<SidebarComponent />} />  */}
         <Route path="/staff_dashboard" element={<StaffDashboard />} /> 
         <Route path="/birth_cert" element={<BirthCert />} />
-        <Route path="/Admin" element={<AdminDashboard />} />
+        <Route path="/Admin" element={<AdminLandingPage />} />
+        <Route path="/Admin/Dashboard" element={<AdminDashboard />} />
         <Route path="/test" element={<Test />} />
         <Route path="/household" element={<HouseholdCertificateForm />} />
         <Route path="/noc"  element={<NocForm />} />
