@@ -104,6 +104,7 @@ E-Gram Panchayat is a web-based platform aimed at digitizing administrative work
 ---
 
 ## 🖼️ Project Screenshots  
+<<<<<<< HEAD
 
 ### 📌 Admin Action  
 ![Admin Action](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/Admin_Action.png)  
@@ -119,6 +120,30 @@ E-Gram Panchayat is a web-based platform aimed at digitizing administrative work
 
 ### 📌 User View Application  
 ![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/93aec744b788318a7ba6d542cf6beb494acb15bd/View_application.png)  
+=======
+### 📌 User Landing Page   
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/User-Landing.png)  
+
+### 📌 User View Application  
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/User-Application.png)  
+
+### 📌 User Downloading Approved Application  
+![User View Application](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/PDF-gen.png)  
+
+
+
+### 📌 Admin Dashboard  
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Dashboard.png)  
+
+### 📌 Admin Dashboard  
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Dashboard-2.png)  
+### 📌 Admin Application Management   
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/Admin-Application-Manage.png)  
+### 📌 Admin Action ( verifying the Uploaded document's in a preview and deciding to Approve or Reject Application )    
+![Admin Dashboard](https://github.com/AsjadJDawre/E_GramPanchayat/blob/ca5bc3511b9a95c00033b071f3be670119f40dc6/verifying_uploaded_docs.png)  
+
+
+>>>>>>> 0b04a0a6592508db8814e6b2539b18322954dd07
 
 ---
 
