@@ -18,14 +18,14 @@ import {
   FiChevronRight
 } from "react-icons/fi";
 import { RiGovernmentLine } from "react-icons/ri";
-
+import { useGuest } from "./context/GuestContext";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const navigate = useNavigate();
     const { username } = useParams();
 
-
+  const {isGuest} = useGuest();
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleSubmenu = (menu) => {
     setActiveSubmenu(activeSubmenu === menu ? null : menu);
@@ -83,7 +83,15 @@ const Sidebar = () => {
       {/* Main Navigation */}
       <nav className="flex-1 overflow-y-auto bg-white ">
         <ul className="space-y-1 p-2">
-          <li>
+         {isGuest ? ( <li>
+            <Link
+              to="/guest-dashboard"
+              className="flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            >
+              <FiHome className="text-lg" />
+              {isOpen && <span className="ml-3">Dashboard</span>}
+            </Link>
+          </li>):  <li>
             <Link
               to="/dashboard"
               className="flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
@@ -91,7 +99,8 @@ const Sidebar = () => {
               <FiHome className="text-lg" />
               {isOpen && <span className="ml-3">Dashboard</span>}
             </Link>
-          </li>
+          </li>} 
+         
 
           <li>
             <Link
