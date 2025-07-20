@@ -47,13 +47,14 @@ const BirthCert = () => {
       Object.entries(formData).forEach(([key, value]) =>
         submissionData.append(key, value)
       );
-      Object.entries(files).forEach(([key, value]) => {
-        if (value) {
-          for (let i = 0; i < value.length; i++) {
-            submissionData.append(`${key}Files`, value[i]);
-          }
-        }
-      });
+     Object.entries(files).forEach(([key, value]) => {
+  if (value) {
+    for (let i = 0; i < value.length; i++) {
+      submissionData.append(key, value[i]); 
+    }
+  }
+});
+
 
       const response = await axios.post(
         `${apiUrl}/api/user/services/birth-cert`,
