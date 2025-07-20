@@ -15,6 +15,10 @@ import NocForm from "./services/NocForm";
 import Forgot_Password from "./components/Forgot_Password";
 import AdminLandingPage from "./components/AdminLanding";
 import ViewApplication from "./components/ViewApplication";
+
+import DashboardViewOnly  from "./components/Guest-Dashboard";
+import StaffDashboardViewOnly from "./components/Guest-Application";
+import LandingPage from "./components/Landing";
 function App() {
   // useEffect(() => {
   //   axios.get('/api/dashboard').then((response) => {
@@ -32,7 +36,8 @@ function App() {
 
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
          <Route path="/dashboard" element={<Dashboard />} />
 <Route path="/viewApplication/:username" element={<ViewApplication />} />
@@ -47,6 +52,10 @@ function App() {
         <Route path="/noc"  element={<NocForm />} />
         <Route path="/forgot-password"  element={<Forgot_Password />} />
         <Route path="*" element={<NotFound />} />
+        {/* {Guest-Routes} */}
+        <Route path="/guest-Application" element={<StaffDashboardViewOnly />}  />
+        <Route path="/guest-dashboard" element={<DashboardViewOnly />}  />
+
       </Routes>
     </Router>
     </>

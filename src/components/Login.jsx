@@ -4,13 +4,14 @@ import axios from 'axios';
 import '../styles/Login.css';
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner"; 
-
+import { useGuest } from "./context/GuestContext";
 const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const{isGuest, setIsGuest} = useGuest();
 
   const handlePasswordToggle = () => {
     setPasswordVisible(!passwordVisible);
@@ -36,12 +37,17 @@ const LoginForm = () => {
       
       const res = resp.data;
       if (res.status === 200 && res.role === 'user') {
+        setIsGuest(false);
         toast.success("User logged in successfully!");
         setTimeout(() => navigate("/dashboard"), 2000);
       } else if (res.status === 200 && res.role === 'admin') {
+                setIsGuest(false);
+
         toast.success("Welcome Admin, logged in successfully!");
         setTimeout(() => navigate("/Admin"), 2000);
       } else if (res.status === 200 && res.role === 'staff') {
+                setIsGuest(false);
+
         toast.success("Welcome Staff, logged in successfully!");
         setTimeout(() => navigate("/staff_dashboard"), 2000);
       }
