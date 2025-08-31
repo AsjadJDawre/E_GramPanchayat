@@ -158,8 +158,8 @@ graph TB
     end
     
     subgraph "Backend Services"
-        E[Firebase Auth] --> F[User Management]
-        G[Firestore DB] --> H[Data Storage]
+        E[JWT Authentication] --> F[User Management]
+        G[MongoDB] --> H[Data Storage]
         I[Cloudinary] --> J[File Storage]
     end
     
@@ -173,6 +173,7 @@ graph TB
     A --> G
     A --> I
     K --> A
+
 ```
 
 ### 🎯 **Tech Stack**
